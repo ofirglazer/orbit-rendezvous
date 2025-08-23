@@ -46,6 +46,15 @@ class OrbitController:
                 # Render
                 self.view.render(self.model)
 
+                # exit conditions
+                if self.model.collided_with_star:
+                    self.running = False
+                    print("Collided with star, game over")
+                if self.model.caught_satellite:
+                    self.running = False
+                    print("Caught the satellite, you win")
+
+
                 self.clock.tick(self.fps)
         self.cleanup()
 

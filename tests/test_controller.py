@@ -37,7 +37,7 @@ class TestGameController:
         assert hasattr(controller, 'view')
         assert controller.running is True
         assert controller.paused is False
-        assert controller.fps == 2
+        assert controller.fps == 10
 
     def test_controller_custom_dimensions(self, mock_pygame):
         """Test controller accepts custom screen dimensions"""

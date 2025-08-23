@@ -1,3 +1,6 @@
+import math
+from math import gamma
+
 import pytest
 from src.orbit_model import Planet, GameModel
 
@@ -10,7 +13,7 @@ class TestPlanet:
         assert planet.name == "test_planet"
         assert planet.orbit == 0.56
         assert planet.color == (255, 0, 0)
-        assert planet.radius_px == 4
+        assert planet.radius_ratio == 4
         assert planet.angle == 45
 
         assert planet.x == pytest.approx(0.396, 0.01)
@@ -47,6 +50,8 @@ class TestGameModel:
         game = GameModel()
         assert isinstance(game.ships[0], Planet)
         assert isinstance(game.ships[1], Planet)
+        assert game.collided_with_star is False
+        assert game.caught_satellite is False
 
     def test_gamemodel_orbit_change(self):
         # test change orbit
@@ -57,3 +62,17 @@ class TestGameModel:
         game.change_orbit(False)
         game.change_orbit(False)  # twice decrease to be smaller than prev_
         assert game.ships[0].orbit < prev_orbit
+
+    def test_detect_collision(self):
+        # test detection between ships or ship-planet
+        game = GameModel()
+
+        # initially ship is not collided with planet
+        is_collision = game.ships[0].x - game.ships[0].radius_ratio <= game.star.radius_ratio
+        assert is_collision is False
+
+        # ship is collided with planet
+        game.ships[0].x = game.ships[0].radius_ratio / 2
+        game.ships[0].y = game.ships[0].radius_ratio / 2
+        is_collision = game.detect_collision(game.ships[0], game.star)
+        assert is_collision is True

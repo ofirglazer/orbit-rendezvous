@@ -17,7 +17,8 @@ class OrbitRenderer:
     def draw_ship(self, ship):
         x = self.width // 2 * (1 + ship.x)
         y = self.height // 2 * (1 + ship.y)
-        pygame.draw.circle(self.window, ship.color, (x, y), ship.radius_px)
+        radius = ship.radius_ratio * self.width // 2
+        pygame.draw.circle(self.window, ship.color, (x, y), radius)
 
     def render(self, model):
         self.window.blit(self.bg_img, (0, 0))
