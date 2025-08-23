@@ -4,7 +4,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 
-class Orbit_renderer:
+class OrbitRenderer:
 
     def __init__(self, width=600, height=600):
         self.width = width
@@ -15,10 +15,11 @@ class Orbit_renderer:
         self.bg_img = pygame.image.load("stars-galaxy.jpg")
 
     def draw_ship(self, ship):
-        pygame.draw.circle(self.window, ship.color, (ship.x, ship.y), ship.radius_px)
+        x = self.width // 2 * (1 + ship.x)
+        y = self.height // 2 * (1 + ship.y)
+        pygame.draw.circle(self.window, ship.color, (x, y), ship.radius_px)
 
     def render(self, model):
-        self.window.fill(BLACK)  # TODO remove and see if it shows background correctly
         self.window.blit(self.bg_img, (0, 0))
 
         self.draw_ship(model.star)
@@ -26,10 +27,3 @@ class Orbit_renderer:
             self.draw_ship(ship)
 
         pygame.display.flip()
-
-    def draw(self):
-        pygame.draw.circle(self.window, self.color, (int(self.width / 2 + self.x_km / SCALE - self.radius_px / 2),
-                                             int(self.height / 2 + self.y_km / SCALE - self.radius_px / 2)), self.radius_px)
-        self.window.blit(self.bg_img, (0, 0))
-        for planet in planets:
-            planet.draw()

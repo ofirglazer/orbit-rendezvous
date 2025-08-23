@@ -1,39 +1,32 @@
-import pygame
-from orbit_model import GameModel
-from orbit_controller import GameController
-from orbit_view import Orbit_renderer
+# main.py - Entry point of the application
+"""
+Orvit Redezvous game
+===============================
 
+This is a orbit resezvous game, inspired by Sinclair ZX81 classic game.
+
+MVC Architecture:
+- Model (orbit_model.py): Contains game state, logic, and data structures
+- View (orbit_view.py): Handles all rendering and visual presentation
+- Controller (orbit_controller.py): Manages input handling and coordinates model/view
+- Main (main.py): Entry point that initializes and starts the game
+
+To run: python main.py
+
+Controls:
+- Menu: SPACE to start, Q to quit
+- Game: UP and DOWN arrow keys increase or decrease orbit, SPACE to pause, ESC for quit
+"""
+
+from orbit_controller import OrbitController
 
 def main():
     """Main entry point"""
-    screen_width, screen_height = 600, 600
-    clock = pygame.time.Clock()
-    fps = 2
+    print(__doc__)
 
-    model = GameModel()
-    view = Orbit_renderer(screen_width, screen_height)
-    controller = GameController(model, view)
+    # screen_width, screen_height = 600, 600
+    controller = OrbitController()
+    controller.run()
 
-    running = True
-    paused = False
-
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:  # Pause/unpause
-                    paused = not paused
-                elif event.key == pygame.K_ESCAPE:
-                    running = False
-            controller.handle_event(event)  # Controller processes input
-
-        if not paused:
-            controller.update()  # Controller updates Model based on game logic
-            view.render(model)  # View renders the Model's state
-            # Update Display and Control Frame Rate
-            clock.tick(fps)
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

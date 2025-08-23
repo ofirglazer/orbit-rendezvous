@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import Mock, patch, MagicMock
-from src.orbit_view import Orbit_renderer
+from src.orbit_view import OrbitRenderer
 from src.orbit_model import GameModel
 
 
@@ -20,7 +20,7 @@ class TestOrbitView:
         # mock_font.return_value = mock_font_instance  # Font() returns fake font
 
         # Create view - this will call mocked functions
-        view = Orbit_renderer(800, 600)
+        view = OrbitRenderer(800, 600)
 
         # Verify pygame.init was called
         mock_init.assert_called_once()
@@ -68,7 +68,7 @@ class TestOrbitView:
         mock_image_load.return_value = MagicMock()  # Fake surface object
 
         # Create view - this will call mocked functions
-        view = Orbit_renderer(400, 400)
+        view = OrbitRenderer(400, 400)
         model = GameModel()
         view.render(model)
 

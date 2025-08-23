@@ -3,7 +3,7 @@
 # random.seed(1)
 import math
 
-TIMESTEP = 1
+TIMESTEP = 0.5
 # screen is square
 # sizes are relative to the screen: -1 to 1
 
@@ -46,11 +46,11 @@ class Planet:
 class GameModel:
 
     def __init__(self):
-        self.star = Planet("Star", 0, (255, 204, 51), 5, 0)
+        self.star = Planet("Star", 0, (255, 204, 51), 50, 0)
         Planet.g_const = 100
         self.ships = \
-            [Planet("ship1", 0.6, (56, 56, 56), 1, 0),
-             Planet("debris", 0.3, (230, 230, 230), 2, 90)]
+            [Planet("ship1", 0.6, (56, 56, 200), 10, 0),
+             Planet("debris", 0.3, (230, 100, 100), 5, 90)]
         # TODO random initial orbits
 
     def change_orbit(self, is_increase):
