@@ -1,4 +1,5 @@
 import pygame
+from src.config import OrbitConfig
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -6,11 +7,13 @@ WHITE = (255, 255, 255)
 
 class OrbitRenderer:
 
-    def __init__(self, width=600, height=600):
-        self.width = width
-        self.height = height
+    def __init__(self, config: OrbitConfig = None):
+        self.config = config or OrbitConfig()
+
+        self.width = self.config.screen_width
+        self.height = self.config.screen_height
         pygame.init()
-        self.window = pygame.display.set_mode((width, height))
+        self.window = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("Orbit Rendezvous")
         self.bg_img = pygame.image.load("stars-galaxy.jpg")
 

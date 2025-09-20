@@ -2,14 +2,14 @@
 # from copy import deepcopy
 # random.seed(1)
 import math
+from src.config import OrbitConfig
 
-TIMESTEP = 0.5
 # screen is square
 # sizes are relative to the screen: -1 to 1
 
 
 class Planet:
-    g_const = 1  # arbitrary gravity constant
+    g_const = 1  # init arbitrary gravity constant
 
     def __init__(self, name, orbit, color, radius_ratio, init_angle):
         self.name = name
@@ -28,40 +28,41 @@ class Planet:
         # update velocity vector according to orbit radius
         return Planet.g_const * math.sqrt(self.orbit ** 3)
 
-    def advance(self):
-        self.angle = (self.angle + TIMESTEP / self.period * 360) % 360
+    def advance(self, dt):
+        self.angle = (self.angle + dt / self.period * 360) % 360
         self.x = self.orbit * math.cos(math.radians(self.angle))
         self.y = self.orbit * math.sin(math.radians(self.angle))
         # print(f"{self.angle} deg, x={self.x}, y={self.y}")
 
-    def increase_orbit(self, is_increase):
-        orbit_step = 0.05
-        if is_increase:
-            self.orbit += orbit_step
-        else:
-            self.orbit -= orbit_step
+    def increase_orbit(self, delta_v):
+        self.orbit += delta_v
         self.period = self.calc_period()
 
 
 class GameModel:
 
-    def __init__(self):
-        self.star = Planet("Star", 0, (255, 204, 51), 0.08, 0)
+    def __init__(self, config: OrbitConfig = None):
+        self.config = config or OrbitConfig()
+
+        self.star = Planet("Star", 0, self.config.planet_color, self.config.planet_radius, 0)
         Planet.g_const = 100
         self.ships = \
-            [Planet("ship1", 0.6, (56, 56, 200), 0.02, 0),
-             Planet("debris", 0.5, (230, 100, 100), 0.02, 90)]
+            [Planet("ship1", self.config.ship_orbit, self.config.ship_color, self.config.ship_radius, 0),
+             Planet("debris", self.config.debris_orbit, self.config.debris_color, self.config.debris_radius, 90)]
         self.collided_with_star = False
         self.caught_satellite = False
         # TODO random initial orbits
 
     def change_orbit(self, is_increase):
-        self.ships[0].increase_orbit(is_increase)
+        if is_increase:
+            self.ships[0].increase_orbit(self.config.orbit_change_step)
+        else:
+            self.ships[0].increase_orbit(-self.config.orbit_change_step)
 
     def update(self):
         for ship in self.ships:
             ship.calc_period()
-            ship.advance()
+            ship.advance(self.config.dt)
         self.collided_with_star = self.detect_collision(self.ships[0], self.star)
         self.caught_satellite = self.detect_collision(self.ships[0], self.ships[1])
 
