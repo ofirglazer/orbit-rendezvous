@@ -18,7 +18,6 @@ class Planet:
         self.name = name
         self.color = color
         self.radius_ratio = radius_ratio
-        # self.period = self.calc_period() #TODO remove function and calls
 
     def __str__(self):
         return f"{self.name}"
@@ -36,7 +35,6 @@ class Planet:
 
     def anomaly_from_state(self, e):
         x, y = self.r
-        vx, vy = self.v
         # True anomaly
         theta = np.arctan2(y, x)
         # Eccentric anomaly
@@ -50,11 +48,8 @@ class Planet:
         M = E - e * np.sin(E)
         return theta, E, M
 
-    def calc_period(self):
-        # update velocity vector according to orbit radius
-        return Planet.g_const * math.sqrt(self.orbit ** 3)
-
-    def solve_kepler(self, M, e, tol=1e-10, max_iter=50):
+    @staticmethod
+    def solve_kepler(M, e, tol=1e-10, max_iter=50):
         E = M if e < 0.8 else np.pi
         for _ in range(max_iter):
             f = E - e * np.sin(E) - M
@@ -90,8 +85,8 @@ class Planet:
         # print(f"{self.angle} deg, x={self.x}, y={self.y}")
 
     def increase_orbit(self, delta_v):
-        self.orbit += delta_v
-        self.period = self.calc_period()
+        pass
+        # self.orbit += delta_v
 
 
 class GameModel:
@@ -99,11 +94,14 @@ class GameModel:
     def __init__(self, config: OrbitConfig = None):
         self.config = config or OrbitConfig()
 
-        self.star = Planet("Star", (0.0, 0.0), (0.0, 0.0), self.config.mu, self.config.planet_color, self.config.planet_radius)
+        self.star = Planet("Star", (0.0, 0.0), (0.0, 0.0), self.config.mu,
+                           self.config.planet_color, self.config.planet_radius)
         # TODO remove Planet.g_const = self.config.g_const
         self.ships = \
-            [Planet("ship1", self.config.ship_position, self.config.ship_velocity, self.config.mu, self.config.ship_color, self.config.ship_radius),
-             Planet("debris", self.config.debris_position, self.config.debris_velocity, self.config.mu, self.config.debris_color, self.config.debris_radius)]
+            [Planet("ship1", self.config.ship_position, self.config.ship_velocity, self.config.mu,
+                    self.config.ship_color, self.config.ship_radius),
+             Planet("debris", self.config.debris_position, self.config.debris_velocity, self.config.mu,
+                    self.config.debris_color, self.config.debris_radius)]
         self.collided_with_star = False
         self.caught_satellite = False
         # TODO random initial orbits
@@ -116,12 +114,12 @@ class GameModel:
 
     def update(self):
         for ship in self.ships:
-            # ship.calc_period()
             ship.advance(self.config.dt)
-        #TODO self.collided_with_star = self.detect_collision(self.ships[0], self.star)
-        #TODO self.caught_satellite = self.detect_collision(self.ships[0], self.ships[1])
+        # TODO self.collided_with_star = self.detect_collision(self.ships[0], self.star)
+        # TODO self.caught_satellite = self.detect_collision(self.ships[0], self.ships[1])
 
-    def detect_collision(self, ship1, ship2):
+    @staticmethod
+    def detect_collision(ship1, ship2):
         is_collision = ((ship1.x - ship2.x) ** 2 + (ship1.y - ship2.y) ** 2 <=
                         (ship1.radius_ratio + ship2.radius_ratio) ** 2)
         return is_collision
@@ -134,4 +132,3 @@ if __name__ == '__main__':
     model = GameModel()
     for _ in range(100):
         model.update()
-        print(model.ships[0].angle)
