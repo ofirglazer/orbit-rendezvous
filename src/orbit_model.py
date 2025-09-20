@@ -4,7 +4,6 @@
 import math
 from src.config import OrbitConfig
 
-TIMESTEP = 0.5
 # screen is square
 # sizes are relative to the screen: -1 to 1
 
@@ -29,18 +28,14 @@ class Planet:
         # update velocity vector according to orbit radius
         return Planet.g_const * math.sqrt(self.orbit ** 3)
 
-    def advance(self):
-        self.angle = (self.angle + TIMESTEP / self.period * 360) % 360
+    def advance(self, dt):
+        self.angle = (self.angle + dt / self.period * 360) % 360
         self.x = self.orbit * math.cos(math.radians(self.angle))
         self.y = self.orbit * math.sin(math.radians(self.angle))
         # print(f"{self.angle} deg, x={self.x}, y={self.y}")
 
-    def increase_orbit(self, is_increase):
-        orbit_step = 0.05
-        if is_increase:
-            self.orbit += orbit_step
-        else:
-            self.orbit -= orbit_step
+    def increase_orbit(self, delta_v):
+        self.orbit += delta_v
         self.period = self.calc_period()
 
 
@@ -59,12 +54,15 @@ class GameModel:
         # TODO random initial orbits
 
     def change_orbit(self, is_increase):
-        self.ships[0].increase_orbit(is_increase)
+        if is_increase:
+            self.ships[0].increase_orbit(self.config.orbit_change_step)
+        else:
+            self.ships[0].increase_orbit(-self.config.orbit_change_step)
 
     def update(self):
         for ship in self.ships:
             ship.calc_period()
-            ship.advance()
+            ship.advance(self.config.dt)
         self.collided_with_star = self.detect_collision(self.ships[0], self.star)
         self.caught_satellite = self.detect_collision(self.ships[0], self.ships[1])
 

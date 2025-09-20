@@ -14,7 +14,7 @@ class OrbitController:
         self.model = GameModel(self.config)
         self.view = OrbitRenderer(self.config)
         self.clock = pygame.time.Clock()
-        self.fps = 10
+        self.fps = self.config.fps
         self.running = True
         self.paused = self.config.paused
 

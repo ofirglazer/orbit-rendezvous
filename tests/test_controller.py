@@ -2,6 +2,7 @@ import pygame
 import pytest
 from unittest.mock import patch, Mock, MagicMock
 from src.orbit_controller import OrbitController
+from src.config import OrbitConfig
 
 
 class TestGameController:
@@ -32,12 +33,13 @@ class TestGameController:
     def test_controller_initialization(self, mock_pygame):
         """Test controller initializes with correct default values"""
         controller = OrbitController()
+        config = OrbitConfig()
 
         assert hasattr(controller, 'model')
         assert hasattr(controller, 'view')
         assert controller.running is True
         assert controller.paused is False
-        assert controller.fps == 10
+        assert controller.fps == config.fps
 
     def test_controller_custom_dimensions(self, mock_pygame):
         """Test controller accepts custom screen dimensions"""

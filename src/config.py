@@ -13,7 +13,7 @@ class OrbitConfig:
 
     # Physics
     g_const = 1  # arbitrary gravity constant
-    TIMESTEP = 0.5  # index parameter of orbit speed
+    dt = 0.5  # index parameter of orbit speed
     ship_orbit = 0.6
     debris_orbit = 0.5
 
@@ -27,5 +27,5 @@ class OrbitConfig:
     debris_color: Tuple[int, int, int] = (230, 100, 100)  # Reddish
 
     # Controls
-    orbit__change_step: float = 0.05
+    orbit_change_step: float = 0.05
     paused: bool = False
