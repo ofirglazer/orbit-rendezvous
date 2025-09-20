@@ -1,9 +1,9 @@
 # main.py - Entry point of the application
 """
-Orvit Redezvous game
+Orbit Rendezvous game
 ===============================
 
-This is a orbit resezvous game, inspired by Sinclair ZX81 classic game.
+This is an orbit rendezvous game, inspired by Sinclair ZX81 classic game.
 
 MVC Architecture:
 - Model (orbit_model.py): Contains game state, logic, and data structures
@@ -17,12 +17,10 @@ Controls:
 - Menu: SPACE to start, Q to quit
 - Game: UP and DOWN arrow keys increase or decrease orbit, SPACE to pause, ESC for quit
 """
-# TODO configuration file
 # TODO limited maneuvers
-# TODO change energy and not orbit
-
-
+# TODO random initial orbits
 from orbit_controller import OrbitController
+
 
 def main():
     """Main entry point"""
@@ -30,6 +28,7 @@ def main():
 
     controller = OrbitController()
     controller.run()
+
 
 if __name__ == "__main__":
     main()
