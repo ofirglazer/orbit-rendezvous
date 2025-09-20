@@ -18,8 +18,8 @@ class OrbitRenderer:
         self.bg_img = pygame.image.load("stars-galaxy.jpg")
 
     def draw_ship(self, ship):
-        x = self.width // 2 * (1 + ship.x)
-        y = self.height // 2 * (1 + ship.y)
+        x = self.width // 2 * (1 + ship.r[0] / self.config.world_radius)
+        y = self.height // 2 * (1 + ship.r[1] / self.config.world_radius)
         radius = ship.radius_ratio * self.width // 2
         pygame.draw.circle(self.window, ship.color, (x, y), radius)
 
