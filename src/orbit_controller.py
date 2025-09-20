@@ -2,19 +2,21 @@ import pygame
 
 from src.orbit_model import GameModel
 from src.orbit_view import OrbitRenderer
+from src.config import OrbitConfig
 
 
 class OrbitController:
     """Handles user input and coordinates between model and view."""
 
-    def __init__(self, screen_width=600, screen_height=600):
+    def __init__(self, config: OrbitConfig = None):
 
-        self.model = GameModel()
-        self.view = OrbitRenderer(screen_width, screen_height)
+        self.config = config or OrbitConfig()
+        self.model = GameModel(self.config)
+        self.view = OrbitRenderer(self.config)
         self.clock = pygame.time.Clock()
         self.fps = 10
         self.running = True
-        self.paused = False
+        self.paused = self.config.paused
 
     def handle_events(self):
         """Process all pygame events"""
@@ -35,10 +37,11 @@ class OrbitController:
         """Main game loop."""
 
         while self.running:
-            if not self.paused:
 
-                # Handle input
-                self.handle_events()
+            # Handle input
+            self.handle_events()
+
+            if not self.paused:
 
                 # Update game logic
                 self.model.update()
@@ -53,7 +56,6 @@ class OrbitController:
                 if self.model.caught_satellite:
                     self.running = False
                     print("Caught the satellite, you win")
-
 
                 self.clock.tick(self.fps)
         self.cleanup()

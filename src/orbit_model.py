@@ -2,6 +2,7 @@
 # from copy import deepcopy
 # random.seed(1)
 import math
+from src.config import OrbitConfig
 
 TIMESTEP = 0.5
 # screen is square
@@ -9,7 +10,7 @@ TIMESTEP = 0.5
 
 
 class Planet:
-    g_const = 1  # arbitrary gravity constant
+    g_const = 1  # init arbitrary gravity constant
 
     def __init__(self, name, orbit, color, radius_ratio, init_angle):
         self.name = name
@@ -45,12 +46,14 @@ class Planet:
 
 class GameModel:
 
-    def __init__(self):
-        self.star = Planet("Star", 0, (255, 204, 51), 0.08, 0)
+    def __init__(self, config: OrbitConfig = None):
+        self.config = config or OrbitConfig()
+
+        self.star = Planet("Star", 0, self.config.planet_color, self.config.planet_radius, 0)
         Planet.g_const = 100
         self.ships = \
-            [Planet("ship1", 0.6, (56, 56, 200), 0.02, 0),
-             Planet("debris", 0.5, (230, 100, 100), 0.02, 90)]
+            [Planet("ship1", self.config.ship_orbit, self.config.ship_color, self.config.ship_radius, 0),
+             Planet("debris", self.config.debris_orbit, self.config.debris_color, self.config.debris_radius, 90)]
         self.collided_with_star = False
         self.caught_satellite = False
         # TODO random initial orbits
