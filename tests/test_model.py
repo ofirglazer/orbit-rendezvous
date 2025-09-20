@@ -33,12 +33,12 @@ class TestPlanet:
         planet = Planet("test_planet", 0.5, (255, 0, 0), 4, 0)
         prev_orbit = planet.orbit
         prev_period = planet.period
-        planet.increase_orbit(True)
+        planet.add_delta_v(True)
         assert planet.orbit > prev_orbit
         assert planet.period > prev_period
 
-        planet.increase_orbit(False)
-        planet.increase_orbit(False)  # twice decrease to be smaller than prev_
+        planet.add_delta_v(False)
+        planet.add_delta_v(False)  # twice decrease to be smaller than prev_
         assert planet.orbit < prev_orbit
         assert planet.period < prev_period
 

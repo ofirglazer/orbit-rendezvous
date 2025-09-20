@@ -18,7 +18,7 @@ Controls:
 - Game: UP and DOWN arrow keys increase or decrease orbit, SPACE to pause, ESC for quit
 """
 # TODO limited maneuvers
-# TODO change energy and not orbit
+# TODO random initial orbits
 from orbit_controller import OrbitController
 
 
